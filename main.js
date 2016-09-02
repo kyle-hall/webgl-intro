@@ -4,11 +4,23 @@ window.onload = function() {
 
   var gl = canvas.getContext("webgl");
 
-  var vertexShaderSource = document.getElementById("2d-vertex-shader").text;
-  var fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
+  var vertexSource = "attribute vec2 a_position;\n" +
+  "uniform vec2 u_resolution;\n" +
+  "void main() {\n" +
+  "vec2 zeroToOne = a_position / u_resolution;\n" +
+  "vec2 zeroToTwo = zeroToOne * 2.0;\n" +
+  "vec2 clipSpace = zeroToTwo - 1.0;\n" +
+  "gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);\n" +
+  "}";
 
-  var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+  var fragmentSource = "precision mediump float;\n" +
+  "uniform vec4 u_color;\n" +
+  "void main() {\n" +
+  "gl_FragColor = u_color;\n" +
+  "}";
+
+  var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexSource);
+  var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
 
   var program = createProgram(gl, vertexShader, fragmentShader);
 
